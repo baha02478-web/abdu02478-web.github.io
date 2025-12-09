@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Математический канат</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eef2f3;
+    text-align: center;
+}
+
+h1 {
+    margin: 15px;
+}
+
+/* Игроки */
+.players {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 40px;
+}
+
+.player {
+    width: 200px;
+}
+
+input {
+    width: 120px;
+    padding: 10px;
+    font-size: 18px;
+    text-align: center;
+}
+
+button {
+    margin-top: 10px;
+    padding: 8px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Канат */
+.rope-area {
+    margin: 30px auto;
+    width: 600px;
+    position: relative;
+}
+
+.rope {
+    height: 16px;
+    background: repeating-linear-gradient(
+        45deg,
+        #a0522d,
+        #a0522d 10px,
+        #c68642 10px,
+        #c68642 20px
+    );
+    border-radius: 8px;
+}
+
+.marker {
+    width: 20px;
+    height: 30px;
+    background: red;
+    position: absolute;
+    top: -7px;
+    left: 290px;
+    border-radius: 5px;
+}
+
+/* Пример */
+.task {
+    margin: 20px;
+    font-size: 28px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🏆 Математический канат</h1>
+
+<div class="players">
+    <div class="player">
+        <h3>Игрок 1</h3>
+        <input id="p1" type="number">
+        <br>
+        <button onclick="checkAnswer(1)">Тянуть</button>
+    </div>
+
+    <div class="player">
+        <h3>Игрок 2</h3>
+        <input id="p2" type="number">
+        <br>
+        <button onclick="checkAnswer(2)">Тянуть</button>
+    </div>
+</div>
+
+<div class="task" id="task">Пример</div>
+
+<div class="rope-area">
+    <div class="rope"></div>
+    <div class="marker" id="marker"></div>
+</div>
+
+<script>
+let correct;
+let position = 290;
+
+function newTask() {
+    let a = Math.floor(Math.random() * 20) + 1;
+    let b = Math.floor(Math.random() * 20) + 1;
+    let ops = ["+", "-"];
+    let op = ops[Math.floor(Math.random() * ops.length)];
+
+    if (op === "+") correct = a + b;
+    else {
+        if (a < b) [a, b] = [b, a];
+        correct = a - b;
+    }
+
+    document.getElementById("task").innerText = a + " " + op + " " + b;
+}
+
+function checkAnswer(player) {
+    let input = document.getElementById(player === 1 ? "p1" : "p2");
+    let value = Number(input.value);
+
+    if (value === correct) {
+        position += (player === 1 ? -30 : 30);
+        document.getElementById("marker").style.left = position + "px";
+    }
+
+    if (position <= 0) {
+        alert("🎉 Победил Игрок 1!");
+        reset();
+    }
+    if (position >= 580) {
+        alert("🎉 Победил Игрок 2!");
+        reset();
+    }
+
+    input.value = "";
+    newTask();
+}
+
+function reset() {
+    position = 290;
+    document.getElementById("marker").style.left = position + "px";
+}
+
+newTask();
+</script>
+
+</body>
+</html>
